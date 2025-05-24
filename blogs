@@ -1,156 +1,845 @@
-**index.html**
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Blog Page</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Advanced Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --text-color: #333;
+            --bg-color: #fff;
+            --card-bg: #f9f9f9;
+            --border-color: #e1e1e1;
+            --meta-color: #666;
+        }
+
+        .dark-mode {
+            --primary-color: #6b8cae;
+            --secondary-color: #4a7d9d;
+            --text-color: #f0f0f0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --meta-color: #aaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Reading Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--secondary-color);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Featured Posts Slider */
+        .featured-slider {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .slider-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .featured-post {
+            min-width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .featured-post img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .featured-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 30px;
+        }
+
+        .featured-category {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 10px;
+        }
+
+        .slider-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            display: flex;
+            margin: 40px 0;
+        }
+
+        .posts-container {
+            flex: 2;
+            margin-right: 30px;
+        }
+
+        .sidebar {
+            flex: 1;
+        }
+
+        /* Search Widget */
+        .search-widget {
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .search-btn {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .post-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 20px;
+        }
+
+        .post-category {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+        }
+
+        .post-title {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .post-excerpt {
+            color: var(--meta-color);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--meta-color);
+            font-size: 0.8rem;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Newsletter Widget */
+        .newsletter-widget {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .newsletter-title {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .newsletter-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .newsletter-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Categories Widget */
+        .categories-widget {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .widget-title {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .categories-list {
+            list-style: none;
+        }
+
+        .categories-list li {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .categories-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .categories-list a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Social Widget */
+        .social-widget {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .page-numbers {
+            display: flex;
+            list-style: none;
+        }
+
+        .page-numbers li {
+            margin: 0 5px;
+        }
+
+        .page-numbers a {
+            display: block;
+            padding: 8px 15px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .page-numbers a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .posts-container {
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+
+            .featured-post img {
+                height: 300px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+
+            .footer-section {
+                flex: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-post img {
+                height: 250px;
+            }
+
+            .slider-nav {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Blog</h1>
-  </header>
-  <main class="grid">
-    <!-- 10 Example Blog Cards -->
-    <div class="card" onclick="openPost('https://example.com/post1')">
-      <img src="https://via.placeholder.com/400x200?text=AI+In+Business" alt="AI in Business" />
-      <h2>How AI is Changing Business Strategies</h2>
-      <p>May 24, 2025</p>
-      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+    <!-- Reading Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <div class="card" onclick="openPost('https://example.com/post2')">
-      <img src="https://via.placeholder.com/400x200?text=Marketing+Tips" alt="Marketing Tips" />
-      <h2>Top 5 Marketing Tips for Startups</h2>
-      <p>May 23, 2025</p>
-      <iframe src="https://www.youtube.com/embed/3fumBcKC6RE" allowfullscreen></iframe>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">MyBlog</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Featured Posts Slider -->
+    <div class="container">
+        <div class="featured-slider">
+            <div class="slider-container" id="slider">
+                <div class="featured-post">
+                    <img src="https://source.unsplash.com/random/1200x400/?technology" alt="Featured Post">
+                    <div class="featured-content">
+                        <span class="featured-category">Technology</span>
+                        <h2>The Future of Artificial Intelligence</h2>
+                        <p>Exploring how AI will transform our world in the coming decade...</p>
+                    </div>
+                </div>
+                <div class="featured-post">
+                    <img src="https://source.unsplash.com/random/1200x400/?travel" alt="Featured Post">
+                    <div class="featured-content">
+                        <span class="featured-category">Travel</span>
+                        <h2>Top 10 Hidden Gems in Europe</h2>
+                        <p>Discover these amazing places that most tourists don't know about...</p>
+                    </div>
+                </div>
+                <div class="featured-post">
+                    <img src="https://source.unsplash.com/random/1200x400/?health" alt="Featured Post">
+                    <div class="featured-content">
+                        <span class="featured-category">Health</span>
+                        <h2>Mindfulness Techniques for Stress Relief</h2>
+                        <p>Simple practices you can incorporate into your daily routine...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button class="slider-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
     </div>
 
-    <div class="card" onclick="openPost('https://example.com/post3')">
-      <img src="https://via.placeholder.com/400x200?text=Finance+2025" alt="Finance Trends" />
-      <h2>Finance Trends to Watch in 2025</h2>
-      <p>May 22, 2025</p>
-      <iframe src="https://www.youtube.com/embed/xvFZjo5PgG0" allowfullscreen></iframe>
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Posts Container -->
+        <div class="posts-container">
+            <!-- Posts Grid -->
+            <div class="posts-grid">
+                <!-- Post Card 1 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?programming" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Technology</span>
+                        <h3 class="post-title">Getting Started with Python Programming</h3>
+                        <p class="post-excerpt">Learn the basics of Python programming language and why it's so popular among developers...</p>
+                        <div class="post-meta">
+                            <span>May 24, 2023</span>
+                            <span>5 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+
+                <!-- Post Card 2 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?cooking" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Food</span>
+                        <h3 class="post-title">10 Easy Recipes for Busy Weeknights</h3>
+                        <p class="post-excerpt">Quick and delicious meals you can prepare in under 30 minutes after a long day...</p>
+                        <div class="post-meta">
+                            <span>May 22, 2023</span>
+                            <span>7 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+
+                <!-- Post Card 3 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?fitness" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Fitness</span>
+                        <h3 class="post-title">Home Workout Routine With No Equipment</h3>
+                        <p class="post-excerpt">Stay fit at home with these effective exercises that require no special equipment...</p>
+                        <div class="post-meta">
+                            <span>May 20, 2023</span>
+                            <span>6 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+
+                <!-- Post Card 4 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?finance" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Finance</span>
+                        <h3 class="post-title">Personal Finance Tips for Young Professionals</h3>
+                        <p class="post-excerpt">How to manage your money wisely in your 20s and 30s to set yourself up for financial success...</p>
+                        <div class="post-meta">
+                            <span>May 18, 2023</span>
+                            <span>8 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+
+                <!-- Post Card 5 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?photography" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Photography</span>
+                        <h3 class="post-title">Smartphone Photography Tips for Stunning Shots</h3>
+                        <p class="post-excerpt">You don't need an expensive camera to take amazing photos - here's how to maximize your smartphone...</p>
+                        <div class="post-meta">
+                            <span>May 15, 2023</span>
+                            <span>5 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+
+                <!-- Post Card 6 -->
+                <article class="post-card">
+                    <img src="https://source.unsplash.com/random/600x400/?books" alt="Post image" class="post-image">
+                    <div class="post-content">
+                        <span class="post-category">Books</span>
+                        <h3 class="post-title">Must-Read Books for Personal Development</h3>
+                        <p class="post-excerpt">These transformative books will change the way you think about success, happiness, and personal growth...</p>
+                        <div class="post-meta">
+                            <span>May 12, 2023</span>
+                            <span>9 min read</span>
+                        </div>
+                        <a href="#" class="read-more">Read more →</a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <ul class="page-numbers">
+                    <li><a href="#">&laquo;</a></li>
+                    <li><a href="#" class="active">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Search Widget -->
+            <div class="search-widget">
+                <form class="search-form">
+                    <input type="text" placeholder="Search..." class="search-input">
+                    <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <!-- Newsletter Widget -->
+            <div class="newsletter-widget">
+                <h3 class="widget-title">Subscribe to Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="text" placeholder="Your Name">
+                    <input type="email" placeholder="Your Email">
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+
+            <!-- Categories Widget -->
+            <div class="categories-widget">
+                <h3 class="widget-title">Categories</h3>
+                <ul class="categories-list">
+                    <li><a href="#">Technology (12)</a></li>
+                    <li><a href="#">Travel (8)</a></li>
+                    <li><a href="#">Food (15)</a></li>
+                    <li><a href="#">Health (7)</a></li>
+                    <li><a href="#">Finance (9)</a></li>
+                    <li><a href="#">Books (5)</a></li>
+                    <li><a href="#">Photography (6)</a></li>
+                </ul>
+            </div>
+
+            <!-- Popular Posts Widget -->
+            <div class="categories-widget">
+                <h3 class="widget-title">Popular Posts</h3>
+                <ul class="categories-list">
+                    <li><a href="#">Getting Started with Python Programming</a></li>
+                    <li><a href="#">10 Easy Recipes for Busy Weeknights</a></li>
+                    <li><a href="#">Personal Finance Tips for Young Professionals</a></li>
+                    <li><a href="#">Home Workout Routine With No Equipment</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Widget -->
+            <div class="social-widget">
+                <h3 class="widget-title">Follow Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <div class="card" onclick="openPost('https://example.com/post4')">
-      <img src="https://via.placeholder.com/400x200?text=Remote+Work" alt="Remote Work" />
-      <h2>Is Remote Work the Future?</h2>
-      <p>May 21, 2025</p>
-      <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U" allowfullscreen></iframe>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>MyBlog is dedicated to providing quality content on various topics including technology, travel, food, and more.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul>
+                    <li>Email: info@myblog.com</li>
+                    <li>Phone: (123) 456-7890</li>
+                    <li>Address: 123 Blog Street, City</li>
+                </ul>
+            </div>
+        </div>
+        <div class="container copyright">
+            <p>&copy; 2023 MyBlog. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <div class="card" onclick="openPost('https://example.com/post5')">
-      <img src="https://via.placeholder.com/400x200?text=Bookkeeping" alt="Bookkeeping" />
-      <h2>Basics of Online Bookkeeping</h2>
-      <p>May 20, 2025</p>
-      <iframe src="https://www.youtube.com/embed/kXYiU_JCYtU" allowfullscreen></iframe>
-    </div>
+    <script>
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
 
-    <div class="card" onclick="openPost('https://example.com/post6')">
-      <img src="https://via.placeholder.com/400x200?text=Productivity" alt="Productivity" />
-      <h2>Top 3 Apps to Boost Your Productivity</h2>
-      <p>May 19, 2025</p>
-      <iframe src="https://www.youtube.com/embed/kffacxfA7G4" allowfullscreen></iframe>
-    </div>
+        // Check for saved user preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
 
-    <div class="card" onclick="openPost('https://example.com/post7')">
-      <img src="https://via.placeholder.com/400x200?text=Entrepreneurship" alt="Entrepreneurship" />
-      <h2>Journey of a First-Time Entrepreneur</h2>
-      <p>May 18, 2025</p>
-      <iframe src="https://www.youtube.com/embed/e-ORhEE9VVg" allowfullscreen></iframe>
-    </div>
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
 
-    <div class="card" onclick="openPost('https://example.com/post8')">
-      <img src="https://via.placeholder.com/400x200?text=SEO+Tips" alt="SEO Tips" />
-      <h2>Quick SEO Wins for Your Website</h2>
-      <p>May 17, 2025</p>
-      <iframe src="https://www.youtube.com/embed/OPf0YbXqDm0" allowfullscreen></iframe>
-    </div>
+        // Reading Progress Bar
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
 
-    <div class="card" onclick="openPost('https://example.com/post9')">
-      <img src="https://via.placeholder.com/400x200?text=Ecommerce+Tips" alt="Ecommerce" />
-      <h2>How to Start Your Ecommerce Store</h2>
-      <p>May 16, 2025</p>
-      <iframe src="https://www.youtube.com/embed/LsoLEjrDogU" allowfullscreen></iframe>
-    </div>
+        // Featured Posts Slider
+        const slider = document.getElementById('slider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.featured-post');
+        const totalSlides = slides.length;
 
-    <div class="card" onclick="openPost('https://example.com/post10')">
-      <img src="https://via.placeholder.com/400x200?text=Leadership" alt="Leadership" />
-      <h2>Developing Leadership in Your Team</h2>
-      <p>May 15, 2025</p>
-      <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" allowfullscreen></iframe>
-    </div>
-  </main>
-  <script src="script.js"></script>
+        function updateSlider() {
+            slider.scrollTo({
+                left: currentIndex * slider.offsetWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlider();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
+
+        // Auto slide change every 5 seconds
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlider();
+        }, 5000);
+
+        // Search Functionality
+        const searchForm = document.querySelector('.search-form');
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = this.querySelector('.search-input').value;
+            alert(`Searching for: ${searchTerm}`);
+            // In a real implementation, you would redirect to search results or filter posts
+        });
+
+        // Newsletter Subscription
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = this.querySelector('input[type="text"]').value;
+            const email = this.querySelector('input[type="email"]').value;
+            alert(`Thank you, ${name}! You've subscribed with ${email}`);
+            this.reset();
+        });
+    </script>
 </body>
 </html>
-```
-
-**style.css**
-```css
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  color: #333;
-}
-
-header {
-  background: #222;
-  color: white;
-  padding: 1em;
-  text-align: center;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: scale(1.02);
-}
-
-.card img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.card h2 {
-  font-size: 1.2rem;
-  margin: 0.5rem;
-}
-
-.card p {
-  margin: 0.5rem;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.card iframe {
-  width: 100%;
-  height: 200px;
-  border: none;
-}
-```
-
-**script.js**
-```javascript
-function openPost(url) {
-  window.open(url, '_blank');
-}
